@@ -34,8 +34,9 @@
     const repoOwner = 'timmit147';  // Your GitHub username
     const repoName = 'blog';  // Your repository name
     const blogFolder = 'blogs';  // Folder where blog posts are stored
+    const baseUrl = `https://timmit147.github.io/${repoName}`;  // Base URL for GitHub Pages
 
-    // GitHub API URL to get contents of the blog folder
+    // GitHub API URL to get contents of the blogs folder
     const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${blogFolder}`;
 
     // Function to fetch and display blog posts
@@ -46,7 +47,7 @@
           const blogList = document.getElementById('blog-list');
           blogList.innerHTML = '';  // Clear previous posts
 
-          // Loop through each item in the blog folder
+          // Loop through each item in the blogs folder
           data.forEach(item => {
             if (item.type === 'dir') {  // Check if it's a directory (a blog post)
               const postElement = document.createElement('div');
@@ -54,12 +55,13 @@
 
               const postTitle = item.name;  // Folder name as title
               const imageUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${blogFolder}/${item.name}/image.jpg`;  // Image path
+              const blogPostUrl = `${baseUrl}/${blogFolder}/${item.name}/index.html`;  // Full URL for the blog post
 
               // Add content to the post element
               postElement.innerHTML = `
                 <h2>${postTitle}</h2>
                 <img src="${imageUrl}" alt="${postTitle}">
-                <p><a href="https://github.com/${repoOwner}/${repoName}/blob/main/${blogFolder}/${item.name}/index.html" target="_blank">Read more</a></p>
+                <p><a href="${blogPostUrl}" target="_blank">Read more</a></p>
               `;
 
               // Append the post to the blog list
