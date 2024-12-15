@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Posts</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #blog-list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .blog-post {
+      width: 30%;
+      margin: 15px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .blog-post img {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Blog Posts</h1>
+  <div id="blog-list"></div>
+
+  <script>
+    const repoOwner = 'timmit147';  // Your GitHub username
+    const repoName = 'blog';  // Your repository name
+    const blogFolder = 'blogs';  // Folder where blog posts are stored
+
+    // GitHub API URL to get contents of the blog folder
+    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${blogFolder}`;
+
+    // Function to fetch and display blog posts
+    function fetchBlogPosts() {
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const blogList = document.getElementById('blog-list');
+          blogList.innerHTML = '';  // Clear previous posts
+
+          // Loop through each item in the blog folder
+          data.forEach(item => {
+            if (item.type === 'dir') {  // Check if it's a directory (a blog post)
+              const postElement = document.createElement('div');
+              postElement.classList.add('blog-post');
+
+              const postTitle = item.name;  // Folder name as title
+              const imageUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${blogFolder}/${item.name}/image.jpg`;  // Image path
+
+              // Add content to the post element
+              postElement.innerHTML = `
+                <h2>${postTitle}</h2>
+                <img src="${imageUrl}" alt="${postTitle}">
+                <p><a href="https://github.com/${repoOwner}/${repoName}/blob/main/${blogFolder}/${item.name}/index.html" target="_blank">Read more</a></p>
+              `;
+
+              // Append the post to the blog list
+              blogList.appendChild(postElement);
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching blog posts:', error);
+        });
+    }
+
+    // Load blog posts when the page is loaded
+    document.addEventListener('DOMContentLoaded', fetchBlogPosts);
+  </script>
+</body>
+</html>
